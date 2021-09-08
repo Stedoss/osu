@@ -5,6 +5,7 @@ using System;
 using osu.Framework.Allocation;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
+using osu.Framework.Input.Events;
 using osu.Game.Graphics;
 using osu.Game.Graphics.Sprites;
 using osu.Game.Input.Bindings;
@@ -69,6 +70,12 @@ namespace osu.Game.Screens.Select
 
             TriggerClick();
             return true;
+        }
+
+        protected override bool OnClick(ClickEvent e)
+        {
+            rewindSearch = e.ShiftPressed;
+            return base.OnClick(e);
         }
 
         public override void OnReleased(GlobalAction action)
