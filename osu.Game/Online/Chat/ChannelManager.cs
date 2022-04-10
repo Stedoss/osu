@@ -9,11 +9,13 @@ using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Extensions;
 using osu.Framework.Logging;
+using osu.Framework.Platform;
 using osu.Game.Database;
 using osu.Game.Input;
 using osu.Game.Online.API;
 using osu.Game.Online.API.Requests;
 using osu.Game.Online.API.Requests.Responses;
+using osu.Game.Overlays;
 using osu.Game.Overlays.Chat.Tabs;
 
 namespace osu.Game.Online.Chat
@@ -66,6 +68,12 @@ namespace osu.Game.Online.Chat
 
         [Resolved]
         private UserLookupCache users { get; set; }
+
+        [Resolved]
+        private Storage storage { get; set; }
+
+        [Resolved]
+        private NotificationOverlay notifications { get; set; }
 
         public readonly BindableBool HighPollRate = new BindableBool();
 
@@ -312,8 +320,12 @@ namespace osu.Game.Online.Chat
                     api.Queue(request);
                     break;
 
+                case "savelog":
+                    new ChannelContentExporter(storage, notifications).ExportChannel(target);
+                    break;
+
                 case "help":
-                    target.AddNewMessages(new InfoMessage("Supported commands: /help, /me [action], /join [channel], /chat [user], /np"));
+                    target.AddNewMessages(new InfoMessage("Supported commands: /help, /me [action], /join [channel], /chat [user], /np, /savelog"));
                     break;
 
                 default:

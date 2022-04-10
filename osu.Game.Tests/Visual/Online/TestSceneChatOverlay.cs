@@ -588,6 +588,9 @@ namespace osu.Game.Tests.Visual.Online
             public TestChatOverlay ChatOverlay { get; private set; }
 
             [Cached]
+            public NotificationOverlay NotificationOverlay { get; } = new NotificationOverlay();
+
+            [Cached]
             public ChannelManager ChannelManager { get; } = new ChannelManager();
 
             private readonly List<Channel> channels;
