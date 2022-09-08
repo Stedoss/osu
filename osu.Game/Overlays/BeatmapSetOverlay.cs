@@ -10,6 +10,7 @@ using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
+using osu.Game.Online.API;
 using osu.Game.Online.API.Requests;
 using osu.Game.Online.API.Requests.Responses;
 using osu.Game.Overlays.BeatmapSet;
@@ -29,6 +30,11 @@ namespace osu.Game.Overlays
         public const float RIGHT_WIDTH = 275;
 
         private readonly Bindable<APIBeatmapSet> beatmapSet = new Bindable<APIBeatmapSet>();
+
+        private readonly IBindable<APIState> apiState = new Bindable<APIState>();
+
+        private int? lastRequestedBeatmapId;
+        private BeatmapSetLookupType? lastBeatmapSetLookupType;
 
         /// <remarks>
         /// Isolates the beatmap set overlay from the game-wide selected mods bindable
@@ -72,6 +78,13 @@ namespace osu.Game.Overlays
             };
         }
 
+        [BackgroundDependencyLoader]
+        private void load(IAPIProvider apiProvider)
+        {
+            apiState.BindTo(apiProvider.State);
+            apiState.BindValueChanged(onlineStateChanged);
+        }
+
         protected override BeatmapSetHeader CreateHeader() => new BeatmapSetHeader();
 
         protected override Color4 BackgroundColour => ColourProvider.Background6;
@@ -84,6 +97,9 @@ namespace osu.Game.Overlays
 
         public void FetchAndShowBeatmap(int beatmapId)
         {
+            lastRequestedBeatmapId = beatmapId;
+            lastBeatmapSetLookupType = BeatmapSetLookupType.BeatmapId;
+
             beatmapSet.Value = null;
 
             var req = new GetBeatmapSetRequest(beatmapId, BeatmapSetLookupType.BeatmapId);
@@ -99,6 +115,9 @@ namespace osu.Game.Overlays
 
         public void FetchAndShowBeatmapSet(int beatmapSetId)
         {
+            lastRequestedBeatmapId = beatmapSetId;
+            lastBeatmapSetLookupType = BeatmapSetLookupType.SetId;
+
             beatmapSet.Value = null;
 
             var req = new GetBeatmapSetRequest(beatmapSetId);
@@ -117,6 +136,23 @@ namespace osu.Game.Overlays
             beatmapSet.Value = set;
             Show();
         }
+
+        private void onlineStateChanged(ValueChangedEvent<APIState> state) => Schedule(() =>
+        {
+            if (lastRequestedBeatmapId != null && state.NewValue == APIState.Online)
+            {
+                switch (lastBeatmapSetLookupType)
+                {
+                    case BeatmapSetLookupType.SetId:
+                        FetchAndShowBeatmapSet(lastRequestedBeatmapId.Value);
+                        break;
+
+                    case BeatmapSetLookupType.BeatmapId:
+                        FetchAndShowBeatmap(lastRequestedBeatmapId.Value);
+                        break;
+                }
+            }
+        });
 
         private class CommentsSection : BeatmapSetLayoutSection
         {
