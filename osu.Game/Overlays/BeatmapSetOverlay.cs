@@ -33,8 +33,7 @@ namespace osu.Game.Overlays
 
         private readonly IBindable<APIState> apiState = new Bindable<APIState>();
 
-        private int? lastRequestedBeatmapId;
-        private BeatmapSetLookupType? lastBeatmapSetLookupType;
+        private GetBeatmapSetRequest lastApiRequest;
 
         /// <remarks>
         /// Isolates the beatmap set overlay from the game-wide selected mods bindable
@@ -97,32 +96,29 @@ namespace osu.Game.Overlays
 
         public void FetchAndShowBeatmap(int beatmapId)
         {
-            lastRequestedBeatmapId = beatmapId;
-            lastBeatmapSetLookupType = BeatmapSetLookupType.BeatmapId;
-
             beatmapSet.Value = null;
 
-            var req = new GetBeatmapSetRequest(beatmapId, BeatmapSetLookupType.BeatmapId);
+            var req = lastApiRequest = new GetBeatmapSetRequest(beatmapId, BeatmapSetLookupType.BeatmapId);
             req.Success += res =>
             {
                 beatmapSet.Value = res;
                 Header.HeaderContent.Picker.Beatmap.Value = Header.BeatmapSet.Value.Beatmaps.First(b => b.OnlineID == beatmapId);
             };
-            API.Queue(req);
+
+            if (apiState.Value == APIState.Online)
+                API.Queue(req);
 
             Show();
         }
 
         public void FetchAndShowBeatmapSet(int beatmapSetId)
         {
-            lastRequestedBeatmapId = beatmapSetId;
-            lastBeatmapSetLookupType = BeatmapSetLookupType.SetId;
-
             beatmapSet.Value = null;
 
-            var req = new GetBeatmapSetRequest(beatmapSetId);
+            var req = lastApiRequest = new GetBeatmapSetRequest(beatmapSetId);
             req.Success += res => beatmapSet.Value = res;
-            API.Queue(req);
+            if (apiState.Value == APIState.Online)
+                API.Queue(req);
 
             Show();
         }
@@ -139,18 +135,11 @@ namespace osu.Game.Overlays
 
         private void onlineStateChanged(ValueChangedEvent<APIState> state) => Schedule(() =>
         {
-            if (lastRequestedBeatmapId != null && state.NewValue == APIState.Online)
+            if (lastApiRequest != null
+                && lastApiRequest.CompletionState == APIRequestCompletionState.Waiting
+                && state.NewValue == APIState.Online)
             {
-                switch (lastBeatmapSetLookupType)
-                {
-                    case BeatmapSetLookupType.SetId:
-                        FetchAndShowBeatmapSet(lastRequestedBeatmapId.Value);
-                        break;
-
-                    case BeatmapSetLookupType.BeatmapId:
-                        FetchAndShowBeatmap(lastRequestedBeatmapId.Value);
-                        break;
-                }
+                API.Queue(lastApiRequest);
             }
         });
 
