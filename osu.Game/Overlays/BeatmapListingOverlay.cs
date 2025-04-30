@@ -97,7 +97,7 @@ namespace osu.Game.Overlays
             apiUser = api.LocalUser.GetBoundCopy();
             apiUser.BindValueChanged(_ => Schedule(() =>
             {
-                if (api.IsLoggedIn)
+                if (!api.IsLoggedIn)
                     replaceResultsAreaContent(Empty());
             }));
         }
@@ -148,8 +148,7 @@ namespace osu.Game.Overlays
 
             previewTrackManager.StopAnyPlaying(this);
 
-            if (panelTarget.Any())
-                Loading.Show();
+            Loading.Show();
         }
 
         private void onSearchFinished(BeatmapListingFilterControl.SearchResult searchResult)
