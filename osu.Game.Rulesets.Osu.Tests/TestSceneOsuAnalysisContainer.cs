@@ -86,7 +86,7 @@ namespace osu.Game.Rulesets.Osu.Tests
             {
                 if (count == 1000)
                 {
-                    Logger.Log($"ShowCursorPath value: ${settings.ShowCursorPath.Value}");
+                    Logger.Log($"ShowCursorPath value: {settings.ShowCursorPath.Value}");
                     Logger.Log($"CursorPath?.Alpha value: {analysisContainer.A}");
                     Logger.Log($"CursorPath?.Vertices.Count value: {analysisContainer.V}");
 

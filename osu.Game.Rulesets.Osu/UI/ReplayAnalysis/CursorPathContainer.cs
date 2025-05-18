@@ -7,6 +7,7 @@ using osu.Framework.Allocation;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics.Lines;
 using osu.Framework.Graphics.Performance;
+using osu.Framework.Logging;
 using osu.Game.Graphics;
 using osuTK;
 
@@ -43,12 +44,14 @@ namespace osu.Game.Rulesets.Osu.UI.ReplayAnalysis
 
         private void entryBecameAlive(LifetimeEntry entry)
         {
+            Logger.Log($"entry became alive: {entry.LifetimeStart} {entry.LifetimeEnd}");
             aliveEntries.Add((AnalysisFrameEntry)entry);
             updateVertices();
         }
 
         private void entryBecameDead(LifetimeEntry entry)
         {
+            Logger.Log($"entry became dead: {entry.LifetimeStart} {entry.LifetimeEnd}");
             aliveEntries.Remove((AnalysisFrameEntry)entry);
             updateVertices();
         }
@@ -67,6 +70,8 @@ namespace osu.Game.Rulesets.Osu.UI.ReplayAnalysis
 
                 if (entry.Position.Y < min.Y)
                     min.Y = entry.Position.Y;
+
+                Logger.Log($"after loop, min is {min}");
             }
 
             Position = min;

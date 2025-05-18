@@ -7,6 +7,7 @@ using osu.Framework.Bindables;
 using osu.Framework.Caching;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
+using osu.Framework.Logging;
 using osu.Game.Replays;
 using osu.Game.Rulesets.Osu.Configuration;
 using osu.Game.Rulesets.Osu.Replays;
@@ -119,6 +120,8 @@ namespace osu.Game.Rulesets.Osu.UI
                 }
 
                 FrameMarkers.Add(new AnalysisFrameEntry(osuFrame.Time, displayLength.Value, osuFrame.Position, osuFrame.Actions.ToArray()));
+
+                Logger.Log($"Adding frame to CursorPath: {osuFrame.Time} {displayLength.Value} {osuFrame.Position}");
                 CursorPath.Add(new AnalysisFrameEntry(osuFrame.Time, displayLength.Value, osuFrame.Position));
             }
 
