@@ -81,8 +81,9 @@ namespace osu.Game.Rulesets.Osu.Tests
         {
             AddStep("enable aim lines", () => settings.ShowCursorPath.Value = true);
             AddStep("log cursorpath value", () => Logger.Log($"ShowCursorPath value: ${settings.ShowCursorPath.Value}"));
-            AddStep("log cursorpath alpha", () => Logger.Log($"CursorPath?.Alpha value: ${analysisContainer.A}"));
-            AddStep("log cursorpath vert count", () => Logger.Log($"CursorPath?.Vertices.Count value: ${analysisContainer.V}"));
+            AddStep("log cursorpath alpha", () => Logger.Log($"CursorPath?.Alpha value: {analysisContainer.A}"));
+            AddStep("log cursorpath vert count", () => Logger.Log($"CursorPath?.Vertices.Count value: {analysisContainer.V}"));
+            AddAssert("fail", () => false);
             AddUntilStep("aim lines visible", () => analysisContainer.AimLinesVisible);
             AddStep("disable aim lines", () => settings.ShowCursorPath.Value = false);
             AddUntilStep("aim lines not visible", () => !analysisContainer.AimLinesVisible);
