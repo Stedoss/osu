@@ -79,22 +79,18 @@ namespace osu.Game.Rulesets.Osu.Tests
         [Test]
         public void TestAimLines()
         {
-            int count = 0;
-
-            AddStep("enable aim lines", () => settings.ShowCursorPath.Value = true);
+            AddStep("enable aim lines", () =>
+            {
+                Logger.Log($"Enabled aim lines at {Time.Current}");
+                settings.ShowCursorPath.Value = true;
+            });
+            bool a = true;
             AddUntilStep("aim lines visible", () =>
             {
-                if (count == 1000)
+                if (a)
                 {
-                    Logger.Log($"ShowCursorPath value: {settings.ShowCursorPath.Value}");
-                    Logger.Log($"CursorPath?.Alpha value: {analysisContainer.A}");
-                    Logger.Log($"CursorPath?.Vertices.Count value: {analysisContainer.V}");
-
-                    count = 0;
-                }
-                else
-                {
-                    count++;
+                    Logger.Log($"Checking aim lines available at {Time.Current}");
+                    a = false;
                 }
 
                 return analysisContainer.AimLinesVisible;
@@ -112,8 +108,6 @@ namespace osu.Game.Rulesets.Osu.Tests
 
             var actions = new HashSet<OsuAction>();
 
-            double currentTime = Time.Current;
-
             for (int i = 0; i < 1000; i++)
             {
                 posX = Math.Clamp(posX + random.Next(-20, 21), -100, 600);
@@ -130,11 +124,13 @@ namespace osu.Game.Rulesets.Osu.Tests
 
                 frames.Add(new OsuReplayFrame
                 {
-                    Time = currentTime + i * 15,
+                    Time = Time.Current + i * 15,
                     Position = new Vector2(posX, posY),
                     Actions = actions.ToList(),
                 });
             }
+
+            Logger.Log($"Replay fabricated at {Time.Current}");
 
             return new Replay { Frames = frames };
         }
