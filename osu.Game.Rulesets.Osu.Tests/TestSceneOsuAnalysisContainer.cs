@@ -79,12 +79,23 @@ namespace osu.Game.Rulesets.Osu.Tests
         [Test]
         public void TestAimLines()
         {
+            int count = 0;
+
             AddStep("enable aim lines", () => settings.ShowCursorPath.Value = true);
             AddUntilStep("aim lines visible", () =>
             {
-                Logger.Log($"ShowCursorPath value: ${settings.ShowCursorPath.Value}");
-                Logger.Log($"CursorPath?.Alpha value: {analysisContainer.A}");
-                Logger.Log($"CursorPath?.Vertices.Count value: {analysisContainer.V}");
+                if (count == 1000)
+                {
+                    Logger.Log($"ShowCursorPath value: ${settings.ShowCursorPath.Value}");
+                    Logger.Log($"CursorPath?.Alpha value: {analysisContainer.A}");
+                    Logger.Log($"CursorPath?.Vertices.Count value: {analysisContainer.V}");
+
+                    count = 0;
+                }
+                else
+                {
+                    count++;
+                }
 
                 return analysisContainer.AimLinesVisible;
             });
