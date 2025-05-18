@@ -7,6 +7,7 @@ using System.Linq;
 using NUnit.Framework;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
+using osu.Framework.Logging;
 using osu.Framework.Testing;
 using osu.Game.Replays;
 using osu.Game.Rulesets.Osu.Configuration;
@@ -79,6 +80,9 @@ namespace osu.Game.Rulesets.Osu.Tests
         public void TestAimLines()
         {
             AddStep("enable aim lines", () => settings.ShowCursorPath.Value = true);
+            AddStep("log cursorpath value", () => Logger.Log($"ShowCursorPath value: ${settings.ShowCursorPath.Value}"));
+            AddStep("log cursorpath alpha", () => Logger.Log($"CursorPath?.Alpha value: ${analysisContainer.A}"));
+            AddStep("log cursorpath vert count", () => Logger.Log($"CursorPath?.Vertices.Count value: ${analysisContainer.V}"));
             AddUntilStep("aim lines visible", () => analysisContainer.AimLinesVisible);
             AddStep("disable aim lines", () => settings.ShowCursorPath.Value = false);
             AddUntilStep("aim lines not visible", () => !analysisContainer.AimLinesVisible);
@@ -128,6 +132,10 @@ namespace osu.Game.Rulesets.Osu.Tests
             public bool HitMarkersVisible => ClickMarkers?.Alpha > 0 && ClickMarkers.Entries.Any();
             public bool AimMarkersVisible => FrameMarkers?.Alpha > 0 && FrameMarkers.Entries.Any();
             public bool AimLinesVisible => CursorPath?.Alpha > 0 && CursorPath.Vertices.Count > 1;
+
+            public float? A => CursorPath?.Alpha;
+
+            public int? V => CursorPath?.Vertices.Count;
         }
     }
 }
