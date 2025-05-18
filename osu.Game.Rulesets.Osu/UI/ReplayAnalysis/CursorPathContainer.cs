@@ -38,12 +38,15 @@ namespace osu.Game.Rulesets.Osu.UI.ReplayAnalysis
             base.Update();
 
             lifetimeManager.Update(Time.Current);
+
+            Logger.Log($"Time on update: {Time.Current}");
         }
 
         public void Add(AnalysisFrameEntry entry) => lifetimeManager.AddEntry(entry);
 
         private void entryBecameAlive(LifetimeEntry entry)
         {
+            // This never gets called in CI test
             Logger.Log($"entry became alive: {entry.LifetimeStart} {entry.LifetimeEnd}");
             aliveEntries.Add((AnalysisFrameEntry)entry);
             updateVertices();
@@ -70,8 +73,6 @@ namespace osu.Game.Rulesets.Osu.UI.ReplayAnalysis
 
                 if (entry.Position.Y < min.Y)
                     min.Y = entry.Position.Y;
-
-                Logger.Log($"after loop, min is {min}");
             }
 
             Position = min;
