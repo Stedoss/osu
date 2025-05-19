@@ -116,6 +116,8 @@ namespace osu.Game.Rulesets.Osu.Tests
 
             var actions = new HashSet<OsuAction>();
 
+            double currentTime = Time.Current;
+
             for (int i = 0; i < 1000; i++)
             {
                 posX = Math.Clamp(posX + random.Next(-20, 21), -100, 600);
@@ -132,13 +134,13 @@ namespace osu.Game.Rulesets.Osu.Tests
 
                 frames.Add(new OsuReplayFrame
                 {
-                    Time = Time.Current + i * 15,
+                    Time = currentTime + i * 15,
                     Position = new Vector2(posX, posY),
                     Actions = actions.ToList(),
                 });
             }
 
-            Logger.Log($"Replay fabricated at {Time.Current}");
+            Logger.Log($"Replay fabricated at {currentTime}");
 
             return new Replay { Frames = frames };
         }
