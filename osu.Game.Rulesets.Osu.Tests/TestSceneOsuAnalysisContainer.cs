@@ -69,7 +69,6 @@ namespace osu.Game.Rulesets.Osu.Tests
             AddUntilStep("hit markers visible", () => analysisContainer.HitMarkersVisible);
             AddStep("disable hit markers", () => settings.ShowClickMarkers.Value = false);
             AddUntilStep("hit markers not visible", () => !analysisContainer.HitMarkersVisible);
-            AddAssert("fail test", () => false);
         }
 
         [Test]
@@ -83,7 +82,6 @@ namespace osu.Game.Rulesets.Osu.Tests
             AddUntilStep("aim markers visible", () => analysisContainer.AimMarkersVisible);
             AddStep("disable aim markers", () => settings.ShowAimMarkers.Value = false);
             AddUntilStep("aim markers not visible", () => !analysisContainer.AimMarkersVisible);
-            AddAssert("fail test", () => false);
         }
 
         [Test]
@@ -107,7 +105,6 @@ namespace osu.Game.Rulesets.Osu.Tests
             });
             AddStep("disable aim lines", () => settings.ShowCursorPath.Value = false);
             AddUntilStep("aim lines not visible", () => !analysisContainer.AimLinesVisible);
-            AddAssert("fail test", () => false);
         }
 
         private Replay fabricateReplay()
