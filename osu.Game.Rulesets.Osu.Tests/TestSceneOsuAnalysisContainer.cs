@@ -61,19 +61,29 @@ namespace osu.Game.Rulesets.Osu.Tests
         [Test]
         public void TestHitMarkers()
         {
-            AddStep("enable hit markers", () => settings.ShowClickMarkers.Value = true);
+            AddStep("enable hit markers", () =>
+            {
+                Logger.Log($"Enabled hit markers at {Time.Current}");
+                settings.ShowClickMarkers.Value = true;
+            });
             AddUntilStep("hit markers visible", () => analysisContainer.HitMarkersVisible);
             AddStep("disable hit markers", () => settings.ShowClickMarkers.Value = false);
             AddUntilStep("hit markers not visible", () => !analysisContainer.HitMarkersVisible);
+            AddAssert("fail test", () => false);
         }
 
         [Test]
         public void TestAimMarker()
         {
-            AddStep("enable aim markers", () => settings.ShowAimMarkers.Value = true);
+            AddStep("enable aim markers", () =>
+            {
+                Logger.Log($"Enabled aim markers at {Time.Current}");
+                settings.ShowAimMarkers.Value = true;
+            });
             AddUntilStep("aim markers visible", () => analysisContainer.AimMarkersVisible);
             AddStep("disable aim markers", () => settings.ShowAimMarkers.Value = false);
             AddUntilStep("aim markers not visible", () => !analysisContainer.AimMarkersVisible);
+            AddAssert("fail test", () => false);
         }
 
         [Test]
@@ -97,6 +107,7 @@ namespace osu.Game.Rulesets.Osu.Tests
             });
             AddStep("disable aim lines", () => settings.ShowCursorPath.Value = false);
             AddUntilStep("aim lines not visible", () => !analysisContainer.AimLinesVisible);
+            AddAssert("fail test", () => false);
         }
 
         private Replay fabricateReplay()

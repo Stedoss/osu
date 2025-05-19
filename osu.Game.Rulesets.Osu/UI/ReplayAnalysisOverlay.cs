@@ -121,7 +121,7 @@ namespace osu.Game.Rulesets.Osu.UI
 
                 FrameMarkers.Add(new AnalysisFrameEntry(osuFrame.Time, displayLength.Value, osuFrame.Position, osuFrame.Actions.ToArray()));
 
-                Logger.Log($"Adding frame to CursorPath: {osuFrame.Time} {displayLength.Value} {osuFrame.Position}");
+                Logger.Log($"Adding frame to overlay container: {osuFrame.Time} {displayLength.Value} {osuFrame.Position}");
                 CursorPath.Add(new AnalysisFrameEntry(osuFrame.Time, displayLength.Value, osuFrame.Position));
             }
 
